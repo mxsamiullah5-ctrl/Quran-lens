@@ -19,29 +19,28 @@ class QuranifyApp extends StatelessWidget {
         primaryColor: const Color(0xFF1DB954),
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFF1DB954),
-          surface: Color(0xFF181818),
+          surface: Color(0xFF1E1E1E),
         ),
-        fontFamily: 'sans-serif',
       ),
-      home: const QuranifyHome(),
+      home: const QuranifyDashboard(),
     );
   }
 }
 
-class QuranifyHome extends StatefulWidget {
-  const QuranifyHome({super.key});
+class QuranifyDashboard extends StatefulWidget {
+  const QuranifyDashboard({super.key});
 
   @override
-  State<QuranifyHome> createState() => _QuranifyHomeState();
+  State<QuranifyDashboard> createState() => _QuranifyDashboardState();
 }
 
-class _QuranifyHomeState extends State<QuranifyHome> {
+class _QuranifyDashboardState extends State<QuranifyDashboard> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const ExploreScreen(),
-    const LibraryScreen(),
-    const SettingsScreen(),
+  final List<Widget> _pages = const [
+    ExploreTab(),
+    LibraryTab(),
+    SettingsTab(),
   ];
 
   @override
@@ -54,6 +53,7 @@ class _QuranifyHomeState extends State<QuranifyHome> {
         backgroundColor: const Color(0xFF181818),
         selectedItemColor: const Color(0xFF1DB954),
         unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.library_music), label: 'Library'),
@@ -64,8 +64,8 @@ class _QuranifyHomeState extends State<QuranifyHome> {
   }
 }
 
-class ExploreScreen extends StatelessWidget {
-  const ExploreScreen({super.key});
+class ExploreTab extends StatelessWidget {
+  const ExploreTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,10 +79,10 @@ class ExploreScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text(
-                  'Quranify Premium',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                  'Quranify',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 0.5),
                 ),
-                Icon(Icons.verified, color: Color(0xFF1DB954), size: 20),
+                Icon(Icons.verified_rounded, color: Color(0xFF1DB954), size: 22),
               ],
             ),
             const SizedBox(height: 4),
@@ -90,24 +90,45 @@ class ExploreScreen extends StatelessWidget {
               'For Study, Work & Sleep • 100% Free & Ad-Free',
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             const Text(
-              'Modes',
+              'Focus Modes',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
               children: const [
-                Expanded(child: ModeCard(title: 'Study', icon: Icons.menu_book, color: Colors.green)),
+                Expanded(
+                  child: ModeTile(
+                    title: 'Study',
+                    subtitle: 'Memory & Focus',
+                    icon: Icons.menu_book_rounded,
+                    accentColor: Color(0xFF2E7D32),
+                  ),
+                ),
                 SizedBox(width: 10),
-                Expanded(child: ModeCard(title: 'Work Flow', icon: Icons.work, color: Colors.blue)),
+                Expanded(
+                  child: ModeTile(
+                    title: 'Work Flow',
+                    subtitle: 'Deep Ambient',
+                    icon: Icons.work_outline_rounded,
+                    accentColor: Color(0xFF1565C0),
+                  ),
+                ),
                 SizedBox(width: 10),
-                Expanded(child: ModeCard(title: 'Deep Sleep', icon: Icons.nightlight, color: Colors.purple)),
+                Expanded(
+                  child: ModeTile(
+                    title: 'Sleep',
+                    subtitle: 'Rest & Calm',
+                    icon: Icons.nightlight_round,
+                    accentColor: Color(0xFF6A1B9A),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 28),
             const Text(
-              'Recommended Playlists',
+              'Featured Surahs & Playlists',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
@@ -119,22 +140,23 @@ class ExploreScreen extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF181818),
-                    borderRadius: BorderRadius.circular(8),
+                    color: const Color(0xFF1E1E1E),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     leading: Container(
-                      width: 45,
-                      height: 45,
+                      width: 48,
+                      height: 48,
                       decoration: BoxDecoration(
-                        color: Colors.white10,
-                        borderRadius: BorderRadius.circular(6),
+                        color: const Color(0xFF1DB954).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.headphones, color: Color(0xFF1DB954)),
+                      child: const Icon(Icons.play_arrow_rounded, color: Color(0xFF1DB954), size: 28),
                     ),
-                    title: Text('Surah Session ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w500)),
+                    title: Text('Surah Al-Baqarah (${index + 1})', style: const TextStyle(fontWeight: FontWeight.w600)),
                     subtitle: const Text('Mishary Rashid Alafasy • Loop Mode', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                    trailing: const Icon(Icons.play_circle_fill, color: Color(0xFF1DB954), size: 32),
+                    trailing: const Icon(Icons.favorite_border, color: Colors.grey, size: 20),
                   ),
                 );
               },
@@ -146,64 +168,82 @@ class ExploreScreen extends StatelessWidget {
   }
 }
 
-class ModeCard extends StatelessWidget {
+class ModeTile extends StatelessWidget {
   final String title;
+  final String subtitle;
   final IconData icon;
-  final Color color;
+  final Color accentColor;
 
-  const ModeCard({super.key, required this.title, required this.icon, required this.color});
+  const ModeTile({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.accentColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF181818),
+        color: accentColor.withOpacity(0.15),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: accentColor.withOpacity(0.4)),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 28),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          Icon(icon, color: accentColor, size: 26),
+          const SizedBox(height: 12),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          const SizedBox(height: 2),
+          Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 10)),
         ],
       ),
     );
   }
 }
 
-class LibraryScreen extends StatelessWidget {
-  const LibraryScreen({super.key});
+class LibraryTab extends StatelessWidget {
+  const LibraryTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Your Saved Surahs & Downloads', style: TextStyle(color: Colors.grey)),
+        child: Text(
+          'Your Saved Playlists & Downloads\n(Ad-free & Offline Ready)',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
       ),
     );
   }
 }
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class SettingsTab extends StatelessWidget {
+  const SettingsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), backgroundColor: const Color(0xFF181818)),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: const Color(0xFF181818),
+      ),
       body: ListView(
         children: const [
           ListTile(
             leading: Icon(Icons.info_outline),
-            title: Text('Version'),
-            subtitle: Text('1.0.0 Free Edition'),
+            title: Text('App Version'),
+            subtitle: Text('1.0.0 Premium Free Edition'),
           ),
+          Divider(color: Colors.white10),
           ListTile(
-            leading: Icon(Icons.favorite, color: Colors.red),
-            title: Text('Dedicated for the sake of Allah'),
-            subtitle: Text('No ads, no tracking, completely open.'),
+            leading: Icon(Icons.volunteer_activism, color: Color(0xFF1DB954)),
+            title: Text('For the sake of Allah'),
+            subtitle: Text('Built completely free with zero ads or tracking.'),
           ),
         ],
       ),
